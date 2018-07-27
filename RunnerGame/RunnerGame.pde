@@ -1,5 +1,6 @@
 Pig player;
 ArrayList<Bale> bales;
+Bale bale_to_remove;
 
 float floor_height;
 
@@ -14,31 +15,46 @@ void setup() {
 float next_spawn = 0;
 
 void draw() {
-  // Spawn new bales at random intervals
-  if (millis() > next_spawn) {  // Detect if time has passed
-    bales.add(new Bale());      // Create new bale
-    next_spawn = millis() + random(1000, 2000);  // Set next spawn time between 1-2 seconds from now
+  println(player.life);
+  if (player.life >0) {
+    // Spawn new bales at random intervals
+    if (millis() > next_spawn) {  // Detect if time has passed
+      bales.add(new Bale());      // Create new bale
+      next_spawn = millis() + random(500, 1500);  // Set next spawn time between 1-2 seconds from now
+    }
+  } else {
+    println("GAME OVER");
   }
   background(100);
-  
+
   // Draw the player
   player.draw();
+
   for (Bale b : bales) {
     b.draw();   // Draw each bale
-    
+    if (b.pos.x < -100) {
+      bale_to_remove = b;
+    }
     // Check collision with each bale
     if (b.collide(player.pos, player.dims)) {
-       // In here you should:
-       // Animate the collision (turn something red)
-       // Take life from the player
-       // Destroy the bale?
-       text("ouch", width/2, height/2);
+      bale_to_remove = b;
+      player.col = color(255, 0, 0);
+      player.life --;
+      // In here you should:
+      // Animate the collision (turn something red)
+      // Take life from the player
+      // Destroy the bale?
     }
   }
+  bales.remove(bale_to_remove);
+  
   fill(255, 100);
   rect(0, floor_height, 1000, 300);
 }
 
 void keyPressed() {
   player.keyPressed();
+}
+void keyReleased() {
+  player.keyReleased();
 }
