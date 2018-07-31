@@ -29,6 +29,12 @@ void draw() {
 
   // Draw the player
   player.draw();
+  
+  // Life bar
+  for (int i = 0; i < player.life; i++) {
+    fill(255,0,0);
+    ellipse(width/2 + i * width/10, 50, 30, 30);
+  }
 
   for (Bale b : bales) {
     b.draw();   // Draw each bale
